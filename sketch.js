@@ -1,9 +1,3 @@
-// A2Z F16
-// Daniel Shiffman
-// https://github.com/shiffman/A2Z-F16
-// http://shiffman.net/a2z
-
-
 var tweets2009;
 var tweets2010;
 var tweets2011;
@@ -15,6 +9,9 @@ var tweets2016;
 var tweets2017;
 
 var questionTweets;
+
+var quote;
+var quoteDate;
 
 
 // Anything in preload will finish before setup() is triggered
@@ -34,6 +31,8 @@ function preload(){
 function setup() {
 
 	questionTweets = [];
+	quote = '';
+	quoteDate = '';
 
 	var tweetsArray = [tweets2009,tweets2010,tweets2011,tweets2012,tweets2013,tweets2014,tweets2015,tweets2016,tweets2017];
 
@@ -42,25 +41,48 @@ function setup() {
 			if(tweetsArray[i][j]["is_retweet"] === false){
 				var regex1 = /\?{1,}/;
 				var regex2 = /^((?!realDonaldTrump).)*$/;
-				var regex3 = /^"?[^@]/;
-				var tweetText = tweetsArray[i][j].text;
+				var regex3 = /^[^@".]/;
+				var regex4 = /(Via|.?:www|https?|.?t\.co)[^\s]+/;
+ 				var tweetText = tweetsArray[i][j].text;
 				if(regex1.test(tweetText)){
 					if(regex2.test(tweetText)){
 						if(regex3.test(tweetText)){
-							questionTweets.push(tweetsArray[i][j]);							
+							tweetsArray[i][j].text = tweetsArray[i][j].text.replace(regex4, "");
+							questionTweets.push(tweetsArray[i][j]);		
 						}
 					}
 				}
 			}
 		}
 	}
-	var counter = 0;
-	while(counter < 10){
-		var number = Math.floor(Math.random() * questionTweets.length);
-		for(var key in questionTweets[number]){
-			createP(key + ': ' + questionTweets[number][key]);
-		}
-		counter++;
-	}
+	getQuote();
+	$('#new-quote').on('click', getQuote);
+	$('#tweet-quote').attr('href', 'https://twitter.com/intent/tweet?hashtags=quotes&text=' + encodeURIComponent('"' + quote + '" -Donald Trump on ' + quoteDate));
 }
+
+function getQuote(){
+	var number = Math.floor(Math.random() * questionTweets.length);
+	var tweet = questionTweets[number];
+	quoteDate = dateFormatter(tweet.created_at);
+	quote = tweet.text;
+	var quoteSpace = select('#text');
+	quoteSpace.html(quote);
+	var dateSpace = select('#date');
+	dateSpace.html(quoteDate);
+
+}
+
+function dateFormatter(date){
+	var parts = date.split(' ');
+	var month = parts[1];
+	var date;
+	if(parts[2][0] === "0"){
+		date = parts[2][1];
+	} else {
+		date = parts[2];
+	}
+	var year = parts[5];
+	return month + ' ' + date + ', ' + year; 
+}
+
 

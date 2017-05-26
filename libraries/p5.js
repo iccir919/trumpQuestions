@@ -8803,15 +8803,15 @@ var p5 = function(sketch, node, sync) {
       // Setup loading screen
       // Set loading scfeen into dom if not present
       // Otherwise displays and removes user provided loading screen
-      var loadingScreen = document.getElementById(this._loadingScreenId);
-      if(!loadingScreen){
-        loadingScreen = document.createElement('div');
-        loadingScreen.innerHTML = 'Loading...';
-        loadingScreen.style.position = 'absolute';
-        loadingScreen.id = this._loadingScreenId;
-        var node = this._userNode || document.body;
-        node.appendChild(loadingScreen);
-      }
+      // var loadingScreen = document.getElementById(this._loadingScreenId);
+      // if(!loadingScreen){
+      //   loadingScreen = document.createElement('div');
+      //   loadingScreen.innerHTML = 'Loading...';
+      //   loadingScreen.style.position = 'absolute';
+      //   loadingScreen.id = this._loadingScreenId;
+      //   var node = this._userNode || document.body;
+      //   node.appendChild(loadingScreen);
+      // }
       // var methods = this._preloadMethods;
       for (var method in this._preloadMethods){
         // default to p5 if no object defined
